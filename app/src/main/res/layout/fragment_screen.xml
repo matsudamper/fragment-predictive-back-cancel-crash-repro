@@ -19,16 +19,11 @@
         android:layout_height="wrap_content"
         android:textSize="24sp" />
 
-    <Button
-        android:id="@+id/reproduce_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reproduce (back started + commit + back cancelled)" />
-
     <TextView
         android:id="@+id/without_pager_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:text="(without ViewPager2)"
         android:textSize="24sp"
         android:visibility="gone" />
@@ -36,7 +31,15 @@
     <ViewStub
         android:id="@+id/pager_stub"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:inflatedId="@+id/pager"
         android:layout="@layout/view_pager" />
+
+    <!-- Kept away from the Next button so that a flick on Next does not hit it -->
+    <Button
+        android:id="@+id/reproduce_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Reproduce (back started + commit + back cancelled)" />
 </LinearLayout>
