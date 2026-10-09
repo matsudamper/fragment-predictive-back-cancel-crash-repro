@@ -26,7 +26,7 @@ Tapping a button at the screen edge, where the back gesture also starts, breaks 
 - internal processing: `FragmentManager.cancelBackStackTransition()`
 
 What happens
-- FragmentManager Stack is broken.
+- FragmentManager back stack is broken.
   - expected
     - Screen#2 is shown.
     - Back: Screen#2 → Screen#1 → Home
