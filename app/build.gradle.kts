@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
 plugins {
     id("com.android.application")
 }
@@ -24,13 +26,17 @@ android {
         unitTests {
             isIncludeAndroidResources = true
             all { test ->
-                test.testLogging { showStandardStreams = true }
+                test.testLogging {
+                    showStandardStreams = true
+                    events("passed", "failed", "skipped")
+                    exceptionFormat = TestExceptionFormat.FULL
+                }
                 // Robolectric needs this to set up SDK 37 on recent JDKs
                 test.jvmArgs("--add-exports=java.base/jdk.internal.access=ALL-UNNAMED")
-                // Run only one SDK: ./gradlew :app:testDebugUnitTest -ProbolectricSdk=37
-                providers.gradleProperty("robolectricSdk").orNull?.let { sdk ->
-                    test.systemProperty("robolectric.enabledSdks", sdk)
-                }
+                test.systemProperty(
+                    "robolectric.enabledSdks",
+                    providers.gradleProperty("robolectricSdk").getOrElse("37"),
+                )
             }
         }
         managedDevices {

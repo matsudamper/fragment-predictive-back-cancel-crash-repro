@@ -14,10 +14,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 import org.robolectric.Shadows.shadowOf
-import org.robolectric.annotation.Config
 
 @RunWith(AndroidJUnit4::class)
-@Config(sdk = [35, 37])
 class PredictiveBackCancelTest {
 
     // Use a plain FragmentActivity so the test does not depend on the demo MainActivity
