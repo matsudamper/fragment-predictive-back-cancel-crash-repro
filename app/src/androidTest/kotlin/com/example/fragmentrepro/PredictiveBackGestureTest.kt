@@ -47,6 +47,7 @@ class PredictiveBackGestureTest {
     private fun enableGestureNavigationAndPredictiveBack() {
         shell("cmd overlay enable-exclusive --category com.android.internal.systemui.navbar.gestural")
         shell("settings put global enable_back_animation 1")
+        shell("setprop log.tag.FragmentManager VERBOSE")
         waitForNavigationModeToBeAppliedToSystemUi()
         assertEquals("Gesture Navigation not enabled.", "2", shell("settings get secure navigation_mode"))
     }
