@@ -67,7 +67,7 @@ class PredictiveBackGestureTest {
             y = location[1] + nextButton.height / 2
             screenWidth = activity.resources.displayMetrics.widthPixels
         }
-        val flick = if (Build.VERSION.SDK_INT >= 37) FLICK_ON_ANDROID_17 else FLICK_ON_ANDROID_14
+        val flick = if (Build.VERSION.SDK_INT >= 35) FLICK_ON_ANDROID_15_AND_LATER else FLICK_ON_ANDROID_14
         val density = instrumentation.targetContext.resources.displayMetrics.density
         val startX = screenWidth - 2
         val endX = startX - (flick.distanceDp * density).toInt()
@@ -101,8 +101,8 @@ class PredictiveBackGestureTest {
         // Reproduced most often on a real device (ASUS_AI2202, Android 14, 440dpi): 18px in 15ms
         val FLICK_ON_ANDROID_14 = Flick(distanceDp = 18 / 2.75f, durationMs = 15)
 
-        // Android 17 does not send onBackStarted for the short flick above.
-        // Reproduced most often on the Pixel 6 emulator (Android 17, 420dpi): 50px in 15ms
-        val FLICK_ON_ANDROID_17 = Flick(distanceDp = 50 / 2.625f, durationMs = 15)
+        // From Android 15, the system often does not send onBackStarted for the short flick above.
+        // Reproduced most often on the Pixel 6 emulator (Android 17, 420dpi): 50px in 15ms. Also reproduces on Android 15 and 16
+        val FLICK_ON_ANDROID_15_AND_LATER = Flick(distanceDp = 50 / 2.625f, durationMs = 15)
     }
 }
