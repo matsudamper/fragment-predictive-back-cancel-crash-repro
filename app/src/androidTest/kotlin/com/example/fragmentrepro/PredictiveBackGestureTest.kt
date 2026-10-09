@@ -96,7 +96,7 @@ class PredictiveBackGestureTest {
     private class Flick(val distanceDp: Float, val durationMs: Int)
 
     private companion object {
-        const val MAX_ATTEMPTS = 20
+        const val MAX_ATTEMPTS = 50
 
         // Reproduced most often on a real device (ASUS_AI2202, Android 14, 440dpi): 18px in 15ms
         val FLICK_ON_ANDROID_14 = Flick(distanceDp = 18 / 2.75f, durationMs = 15)
