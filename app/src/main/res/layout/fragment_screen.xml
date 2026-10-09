@@ -36,7 +36,6 @@
         android:inflatedId="@+id/pager"
         android:layout="@layout/view_pager" />
 
-    <!-- Kept away from the Next button so that a flick on Next does not hit it -->
     <Button
         android:id="@+id/reproduce_button"
         android:layout_width="match_parent"
