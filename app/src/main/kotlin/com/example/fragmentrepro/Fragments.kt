@@ -1,6 +1,7 @@
 package com.example.fragmentrepro
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewStub
 import android.widget.TextView
@@ -31,9 +32,11 @@ class ScreenFragment : Fragment(R.layout.fragment_screen) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         view.findViewById<TextView>(R.id.screen_title).text = "Screen #$screenNumber"
         view.findViewById<View>(R.id.push_next_screen_button).setOnClickListener {
+            Log.d(TAG, "Next clicked on Screen #$screenNumber")
             requireMainActivity().pushScreen(createNextScreen())
         }
         view.findViewById<View>(R.id.reproduce_button).setOnClickListener {
+            Log.d(TAG, "Reproduce clicked on Screen #$screenNumber")
             requireMainActivity().reproduceWithBackEventsDispatchedManually(createNextScreen())
         }
         if (hasViewPager) {
@@ -75,3 +78,4 @@ class PageFragment : Fragment(R.layout.fragment_label) {
 }
 
 private fun Fragment.requireMainActivity(): MainActivity = requireActivity() as MainActivity
+private const val TAG = "FragmentRepro"
