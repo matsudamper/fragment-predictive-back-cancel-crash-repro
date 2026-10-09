@@ -41,6 +41,13 @@ android {
         }
         managedDevices {
             localDevices {
+                // Android 13 does not send onBackStarted to apps, so the test is expected to pass
+                create("pixel6Api33") {
+                    device = "Pixel 6"
+                    apiLevel = 33
+                    systemImageSource = "google"
+                    testedAbi = "x86_64"
+                }
                 // Android 14, same as the real device where the bug was seen.
                 // Do not use ATD images: they strip SystemUI, so the back gesture may not work.
                 create("pixel6Api34") {
