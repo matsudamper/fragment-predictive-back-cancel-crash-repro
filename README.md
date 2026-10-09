@@ -86,12 +86,3 @@ java.lang.IllegalStateException: Fragment no longer exists for key f#0: unique i
 	at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:552)
 	at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:971)
 ```
-
-## Workaround
-
-```kotlin
-fragmentManager.executePendingTransactions()
-if (fragment.lifecycle.currentState == Lifecycle.State.RESUMED) {
-    navigate()
-}
-```
