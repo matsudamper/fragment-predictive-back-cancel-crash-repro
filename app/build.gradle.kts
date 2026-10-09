@@ -23,10 +23,14 @@ android {
     testOptions {
         unitTests {
             isIncludeAndroidResources = true
-            all {
-                it.testLogging { showStandardStreams = true }
+            all { test ->
+                test.testLogging { showStandardStreams = true }
                 // Robolectric needs this to set up SDK 37 on recent JDKs
-                it.jvmArgs("--add-exports=java.base/jdk.internal.access=ALL-UNNAMED")
+                test.jvmArgs("--add-exports=java.base/jdk.internal.access=ALL-UNNAMED")
+                // Run only one SDK: ./gradlew :app:testDebugUnitTest -ProbolectricSdk=37
+                providers.gradleProperty("robolectricSdk").orNull?.let { sdk ->
+                    test.systemProperty("robolectric.enabledSdks", sdk)
+                }
             }
         }
         managedDevices {
