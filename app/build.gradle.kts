@@ -49,6 +49,18 @@ android {
                     systemImageSource = "google"
                     testedAbi = "x86_64"
                 }
+                create("pixel6Api35") {
+                    device = "Pixel 6"
+                    apiLevel = 35
+                    systemImageSource = "google"
+                    testedAbi = "x86_64"
+                }
+                create("pixel6Api36") {
+                    device = "Pixel 6"
+                    apiLevel = 36
+                    systemImageSource = "google"
+                    testedAbi = "x86_64"
+                }
                 create("pixel6Api37") {
                     device = "Pixel 6"
                     apiLevel = 37
