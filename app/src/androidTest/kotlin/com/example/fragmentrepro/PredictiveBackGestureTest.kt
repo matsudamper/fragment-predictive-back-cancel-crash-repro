@@ -2,6 +2,7 @@ package com.example.fragmentrepro
 
 import android.os.Build
 import android.os.ParcelFileDescriptor
+import android.util.Log
 import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -21,10 +22,13 @@ class PredictiveBackGestureTest {
 
     private val instrumentation = InstrumentationRegistry.getInstrumentation()
     private lateinit var scenario: ActivityScenario<MainActivity>
+    private var screenRecording: ParcelFileDescriptor? = null
+    private var previousExceptionHandler: Thread.UncaughtExceptionHandler? = null
 
     @Before
     fun setUp() {
         enableGestureNavigationAndPredictiveBack()
+        startScreenRecording()
         scenario = ActivityScenario.launch(MainActivity::class.java)
         scenario.onActivity { it.findViewById<View>(R.id.open_screen_with_pager_button).performClick() }
         instrumentation.waitForIdleSync()
@@ -33,6 +37,8 @@ class PredictiveBackGestureTest {
 
     @After
     fun tearDown() {
+        stopScreenRecording()
+        Thread.setDefaultUncaughtExceptionHandler(previousExceptionHandler)
         scenario.close()
     }
 
@@ -75,6 +81,29 @@ class PredictiveBackGestureTest {
         shell("input swipe $startX $y $endX $y ${flick.durationMs}")
     }
 
+
+    private fun startScreenRecording() {
+        // Files in this directory are copied to the host after the test run
+        val dir = InstrumentationRegistry.getArguments().getString("additionalTestOutputDir") ?: "/sdcard/Download"
+        val file = "$dir/flick-api${Build.VERSION.SDK_INT}.mp4"
+        Log.d(TAG, "Recording the screen to $file")
+        screenRecording = instrumentation.uiAutomation.executeShellCommand("screenrecord --size 352x784 --bit-rate 300000 $file")
+        // The bug kills this process. Stop the recording before that, or the mp4 cannot be played.
+        previousExceptionHandler = Thread.getDefaultUncaughtExceptionHandler()
+        Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+            stopScreenRecording()
+            previousExceptionHandler?.uncaughtException(thread, throwable)
+        }
+    }
+
+    private fun stopScreenRecording() {
+        val recording = screenRecording ?: return
+        screenRecording = null
+        shell("pkill -INT screenrecord")
+        // Reading to the end waits until screenrecord has finished writing the file
+        ParcelFileDescriptor.AutoCloseInputStream(recording).use { it.readBytes() }
+    }
+
     private fun findNextButton(activity: MainActivity): View {
         val screen = checkNotNull(activity.supportFragmentManager.findFragmentById(R.id.container))
         return screen.requireView().findViewById(R.id.push_next_screen_button)
@@ -97,6 +126,7 @@ class PredictiveBackGestureTest {
     private class Flick(val distanceDp: Float, val durationMs: Int)
 
     private companion object {
+        const val TAG = "FragmentRepro"
         const val MAX_ATTEMPTS = 50
 
         // Reproduced most often on a real device (ASUS_AI2202, Android 14, 440dpi): 18px in 15ms
