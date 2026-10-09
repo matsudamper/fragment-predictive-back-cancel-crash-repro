@@ -28,6 +28,7 @@ class PredictiveBackGestureTest {
     @Before
     fun setUp() {
         enableGestureNavigationAndPredictiveBack()
+        showPointerLocation()
         startScreenRecording()
         scenario = ActivityScenario.launch(MainActivity::class.java)
         scenario.onActivity { it.findViewById<View>(R.id.open_screen_with_pager_button).performClick() }
@@ -56,6 +57,11 @@ class PredictiveBackGestureTest {
         shell("setprop log.tag.FragmentManager VERBOSE")
         waitForNavigationModeToBeAppliedToSystemUi()
         assertEquals("Gesture Navigation not enabled.", "2", shell("settings get secure navigation_mode"))
+    }
+
+    // Draws a crosshair and trail for each touch, so the flicks are visible in the recording
+    private fun showPointerLocation() {
+        shell("settings put system pointer_location 1")
     }
 
     private fun pushScreensSoThatCompletedBackGesturesDoNotReachHome() {
