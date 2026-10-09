@@ -23,10 +23,10 @@ What happens
   - expected
     - Screen#2 is shown.
     - Back: Screen#2 → Screen#1 → Home
-  - actual:
+  - actual
     - Home is shown.
     - Back: Home → Screen#2 → Home
-- Crash occurs when has ViewPager2.
+- Crash occurs when has ViewPager2.(Screen#1)
 
 ## StackTrace (has ViewPager2)
 
