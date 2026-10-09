@@ -1,4 +1,7 @@
 # Fragment Predictive Back Crash Repro
+
+Tapping a button at the screen edge, where the back gesture also starts, breaks the FragmentManager back stack and can crash the app.
+
 ## Environment
 
 androidx.fragment: 1.9.1
