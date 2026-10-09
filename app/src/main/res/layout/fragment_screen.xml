@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFFFF"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/push_next_screen_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:text="Next" />
+
+    <TextView
+        android:id="@+id/screen_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp" />
+
+    <Button
+        android:id="@+id/reproduce_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Reproduce (back started + commit + back cancelled)" />
+
+    <TextView
+        android:id="@+id/without_pager_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(without ViewPager2)"
+        android:textSize="24sp"
+        android:visibility="gone" />
+
+    <ViewStub
+        android:id="@+id/pager_stub"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inflatedId="@+id/pager"
+        android:layout="@layout/view_pager" />
+</LinearLayout>
