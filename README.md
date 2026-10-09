@@ -11,12 +11,14 @@ Android OS 14+
 - Start(Home)
 - Navigate to Screen#1
 - Press Down navigate to Screen#2 button
-- fire OnBackPressedCallback.handleOnBackStarted
+- fire `OnBackPressedCallback.handleOnBackStarted`
   - Occurs when I try to press a button at the edge of the screen.
 - Release navigate to Screen#2 button(Quickly)
-- FragmentTransaction.commit()
+- call: `FragmentTransaction.commit()`
   - The button is clicked and navigation occurs.
-- handleOnBackCancelled
+- internal processing: `FragmentManager.execPendingActions()`
+- fire: `OnBackPressedCallback.handleOnBackCancelled`
+- internal processing: `FragmentManager.cancelBackStackTransition()`
 
 What happens
 - FragmentManager Stack is broken.
