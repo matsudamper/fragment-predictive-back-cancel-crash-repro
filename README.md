@@ -17,11 +17,12 @@ Tapping a button at the screen edge, where the back gesture also starts, breaks 
 - Navigate to Screen#1
 - Press Down navigate to Screen#2 button
 - fire `OnBackPressedCallback.handleOnBackStarted`
-  - Occurs when I try to press a button at the edge of the screen.
+  - Occurs when quickly flicking inward from the screen edge on the button.
 - Release navigate to Screen#2 button(Quickly)
 - call: `FragmentTransaction.commit()`
   - The button is clicked and navigation occurs.
 - internal processing: `FragmentManager.execPendingActions()`
+  - Executes the transition enqueued by `handleOnBackStarted` and the commit together.
 - fire: `OnBackPressedCallback.handleOnBackCancelled`
 - internal processing: `FragmentManager.cancelBackStackTransition()`
 
