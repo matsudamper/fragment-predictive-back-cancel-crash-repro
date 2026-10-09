@@ -26,7 +26,7 @@ What happens
   - actual
     - Home is shown.
     - Back: Home → Screen#2 → Home
-- Crash occurs when has ViewPager2.(Screen#1)
+- Crash occurs when Screen#1 has ViewPager2.
 
 ## StackTrace (has ViewPager2)
 
