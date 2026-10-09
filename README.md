@@ -4,11 +4,11 @@ Tapping a button at the screen edge, where the back gesture also starts, breaks 
 
 ## Environment
 
-androidx.fragment: 1.9.1
-androidx.activity: 1.13.0
-androidx.viewpager2: 1.1.0
-enableOnBackInvokedCallback="true"
-Android OS 14+
+- androidx.fragment: 1.9.1
+- androidx.activity: 1.13.0
+- androidx.viewpager2: 1.1.0
+- enableOnBackInvokedCallback="true"
+- Android OS 14+
 
 ## Steps to reproduce
 - Start(Home)
