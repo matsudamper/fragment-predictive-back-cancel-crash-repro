@@ -45,8 +45,8 @@ class PredictiveBackGestureTest {
 
     @Test
     fun flickNextButtonFromRightEdgeDoesNotCrash() {
-        repeat(MAX_ATTEMPTS) {
-            flickNextButtonFromRightEdge()
+        repeat(MAX_ATTEMPTS) { attempt ->
+            flickNextButtonFromRightEdge(flickFor(attempt))
             waitForBackCancelAnimationToFinish()
         }
     }
@@ -71,7 +71,14 @@ class PredictiveBackGestureTest {
         }
     }
 
-    private fun flickNextButtonFromRightEdge() {
+    private fun flickFor(attempt: Int): Flick = when {
+        // Apps do not get onBackStarted here. Try every flick to show that none of them breaks it.
+        Build.VERSION.SDK_INT < 34 -> ALL_FLICKS[attempt % ALL_FLICKS.size]
+        Build.VERSION.SDK_INT < 35 -> FLICK_ON_ANDROID_14
+        else -> FLICK_ON_ANDROID_15_AND_LATER
+    }
+
+    private fun flickNextButtonFromRightEdge(flick: Flick) {
         var y = 0
         var screenWidth = 0
         scenario.onActivity { activity ->
@@ -80,7 +87,6 @@ class PredictiveBackGestureTest {
             y = location[1] + nextButton.height / 2
             screenWidth = activity.resources.displayMetrics.widthPixels
         }
-        val flick = if (Build.VERSION.SDK_INT >= 35) FLICK_ON_ANDROID_15_AND_LATER else FLICK_ON_ANDROID_14
         val density = instrumentation.targetContext.resources.displayMetrics.density
         val startX = screenWidth - 2
         val endX = startX - (flick.distanceDp * density).toInt()
@@ -141,5 +147,13 @@ class PredictiveBackGestureTest {
         // From Android 15, the system often does not send onBackStarted for the short flick above.
         // Reproduced most often on the Pixel 6 emulator (Android 17, 420dpi): 50px in 15ms. Also reproduces on Android 15 and 16
         val FLICK_ON_ANDROID_15_AND_LATER = Flick(distanceDp = 50 / 2.625f, durationMs = 15)
+
+        // Every flick that reproduced the bug on Android 14+. 40px in 20ms and 60px in 20ms also reproduced on the Android 17 emulator
+        val ALL_FLICKS = listOf(
+            FLICK_ON_ANDROID_14,
+            Flick(distanceDp = 40 / 2.625f, durationMs = 20),
+            FLICK_ON_ANDROID_15_AND_LATER,
+            Flick(distanceDp = 60 / 2.625f, durationMs = 20),
+        )
     }
 }
