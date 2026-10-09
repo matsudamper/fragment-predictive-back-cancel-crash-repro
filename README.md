@@ -2,6 +2,8 @@
 
 Tapping a button at the screen edge, where the back gesture also starts, breaks the FragmentManager back stack and can crash the app.
 
+<a href="https://github.com/matsudamper/fragment-predictive-back-cancel-crash-repro/raw/refs/heads/main/docs/crash.mp4">Video</a>
+
 ## Environment
 
 - androidx.fragment: 1.9.1
