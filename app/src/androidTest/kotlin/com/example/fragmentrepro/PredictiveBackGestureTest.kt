@@ -1,5 +1,6 @@
 package com.example.fragmentrepro
 
+import android.os.Build
 import android.os.ParcelFileDescriptor
 import android.view.View
 import androidx.test.core.app.ActivityScenario
@@ -27,6 +28,7 @@ class PredictiveBackGestureTest {
         scenario = ActivityScenario.launch(MainActivity::class.java)
         scenario.onActivity { it.findViewById<View>(R.id.open_screen_with_pager_button).performClick() }
         instrumentation.waitForIdleSync()
+        pushScreensSoThatCompletedBackGesturesDoNotReachHome()
     }
 
     @After
@@ -49,20 +51,32 @@ class PredictiveBackGestureTest {
         assertEquals("Gesture Navigation not enabled.", "2", shell("settings get secure navigation_mode"))
     }
 
+    private fun pushScreensSoThatCompletedBackGesturesDoNotReachHome() {
+        repeat(MAX_ATTEMPTS) {
+            scenario.onActivity { findNextButton(it).performClick() }
+            instrumentation.waitForIdleSync()
+        }
+    }
+
     private fun flickNextButtonFromRightEdge() {
         var y = 0
         var screenWidth = 0
         scenario.onActivity { activity ->
-            val screen = checkNotNull(activity.supportFragmentManager.findFragmentById(R.id.container))
-            val nextButton = screen.requireView().findViewById<View>(R.id.push_next_screen_button)
+            val nextButton = findNextButton(activity)
             val location = IntArray(2).also { nextButton.getLocationOnScreen(it) }
             y = location[1] + nextButton.height / 2
             screenWidth = activity.resources.displayMetrics.widthPixels
         }
+        val flick = if (Build.VERSION.SDK_INT >= 37) FLICK_ON_ANDROID_17 else FLICK_ON_ANDROID_14
         val density = instrumentation.targetContext.resources.displayMetrics.density
         val startX = screenWidth - 2
-        val endX = startX - (FLICK_DISTANCE_DP_ON_REPRODUCED_DEVICE * density).toInt()
-        shell("input swipe $startX $y $endX $y $FLICK_DURATION_MS_ON_REPRODUCED_DEVICE")
+        val endX = startX - (flick.distanceDp * density).toInt()
+        shell("input swipe $startX $y $endX $y ${flick.durationMs}")
+    }
+
+    private fun findNextButton(activity: MainActivity): View {
+        val screen = checkNotNull(activity.supportFragmentManager.findFragmentById(R.id.container))
+        return screen.requireView().findViewById(R.id.push_next_screen_button)
     }
 
     private fun waitForNavigationModeToBeAppliedToSystemUi() {
@@ -79,11 +93,16 @@ class PredictiveBackGestureTest {
             .bufferedReader()
             .use { it.readText().trim() }
 
+    private class Flick(val distanceDp: Float, val durationMs: Int)
+
     private companion object {
         const val MAX_ATTEMPTS = 20
 
-        // The flick that reproduced the bug most often on a real device (ASUS_AI2202, 440dpi): 18px in 15ms
-        const val FLICK_DISTANCE_DP_ON_REPRODUCED_DEVICE = 18 / 2.75f
-        const val FLICK_DURATION_MS_ON_REPRODUCED_DEVICE = 15
+        // Reproduced most often on a real device (ASUS_AI2202, Android 14, 440dpi): 18px in 15ms
+        val FLICK_ON_ANDROID_14 = Flick(distanceDp = 18 / 2.75f, durationMs = 15)
+
+        // Android 17 does not send onBackStarted for the short flick above.
+        // Reproduced most often on the Pixel 6 emulator (Android 17, 420dpi): 50px in 15ms
+        val FLICK_ON_ANDROID_17 = Flick(distanceDp = 50 / 2.625f, durationMs = 15)
     }
 }
