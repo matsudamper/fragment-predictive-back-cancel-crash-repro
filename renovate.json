@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "enabledManagers": ["gradle"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["*"],
+      "enabled": false
+    },
+    {
+      "description": "Only update Fragment, including prereleases, to check whether the crash is fixed",
+      "matchPackageNames": ["androidx.fragment:*"],
+      "enabled": true,
+      "ignoreUnstable": false
+    }
+  ]
+}
